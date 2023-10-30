@@ -6,6 +6,9 @@ class usuario:
     
     def registrar_funcionario(self):
         print(f'Funcionário(a) {self.nome} registrado com sucesso!')
+    
+    def __str__(self):  # Método mágico para retornar uma string
+        return f'Nome: {self.nome}\nSalário: {self.salario}\nProfissão: {self.profissao}'
 
 # Classe Gestor herda da classe usuario
 class gestor(usuario):
@@ -21,6 +24,6 @@ usuario1.registrar_funcionario()
 
 gestor1 = gestor('Maria', 5000, 'Gestora', 'TI') # Instanciando a classe Gestor
 gestor1.registrar_funcionario() 
-
+print(gestor1)
 
 #evite usar mais de dois niveis! 
