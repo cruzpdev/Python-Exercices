@@ -19,7 +19,7 @@ class gestor(usuario):
 usuario1 = usuario('João', 2000, 'Analista') # Instanciando a classe usuario
 usuario1.registrar_funcionario() 
 
-gestor1 = Gestor('Maria', 5000, 'Gestora', 'TI') # Instanciando a classe Gestor
+gestor1 = gestor('Maria', 5000, 'Gestora', 'TI') # Instanciando a classe Gestor
 gestor1.registrar_funcionario() 
 
 
