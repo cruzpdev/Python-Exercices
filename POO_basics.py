@@ -194,7 +194,6 @@ funcionario1 = Employee.from_string(funcionariostr1) # criando um objeto funcion
 
 # métodos estáticos: não recebem nada automaticamente. Eles se comportam como funções normais, mas estão dentro da classe porque têm alguma relação com a classe. Vamos criar um método estático que recebe uma data e retorna se é dia útil(trabalho) ou não.
 
-""" 
 class Employee:
     qtd_funcionarios = 0
     aumento = 1.1
@@ -232,7 +231,93 @@ import datetime
 data = datetime.date(2023, 11, 2) 
 print (Employee.dia_util(data)) #True - quinta feira
 
-
+""" 
 # 4. Herança - criando subclasses
+"""
+heranças são usadas para criar subclasses que herdam todos os atributos e métodos da classe pai. Isso permite que você crie subclasses com comportamentos específicos sem afetar a classe pai. Vamos criar as subclasses Developer e Manager que herdam todos os atributos e métodos da classe Employee.
+
+class Employee:
+    
+    aumento = 1.04
+    
+    def __init__ (self, nome, sobrenome, salario):
+        self.nome = nome
+        self.sobrenome = sobrenome
+        self.email = f"{nome.lower()}.{sobrenome.lower()}@company.com"
+        self.salario = salario
+
+    def fullname (self):
+        return f"{self.nome} {self.sobrenome}"
+    
+    def dar_aumento(self):
+        self.salario = int(self.salario * self.aumento)
+
+class Developer(Employee):
+    
+    aumento = 1.10 #aumento específico da classe Developer
+    
+    def __init__(self, nome, sobrenome, salario, linguagem):
+        super().__init__(nome, sobrenome, salario)
+        self.linguagem = linguagem #adicionei um atributo específico da classe Developer
+
+class Manager(Employee):
+    
+    aumento = 1.20 #aumento específico da classe Manager
+    
+    def __init__(self, nome, sobrenome, salario, subordinados=None): #adicionei um atributo específico da classe Manager
+        super().__init__(nome, sobrenome, salario)
+        if subordinados is None:
+            self.subordinados = []
+        else:
+            self.subordinados = subordinados
+    
+    def add_subordinado(self, subordinado): #método para adicionar subordinados
+        if subordinado not in self.subordinados:
+            self.subordinados.append(subordinado)
+    
+    def remove_subordinado(self, subordinado): #método para remover subordinados
+        if subordinado in self.subordinados:
+            self.subordinados.remove(subordinado)
+
+    def print_subordinados(self): #método para printar subordinados
+        for subordinado in self.subordinados:
+            print("-->", subordinado.fullname())
+
+dev_1 = Developer('Paulo', 'Cruz', 10000, 'python')
+dev_2 = Employee('Test','User', 6000)
+mgr_1 = Manager('Sue', 'Smith', 9000)
+
+"""
 # 5. Métodos especiais (magic methods ou dunder methods)
+"""
+Métodos especiais são métodos que permitem que você crie funcionalidades específicas para suas classes que não são facilmente representadas como métodos regulares. Eles são sempre escritos com __ antes e depois do nome do método. Vamos criar um método especial que retorna a representação de repr (representação exata da construção do objeto) do objeto. um segundo método para retornar uma string er outro método especial que retorna a soma dos salários de dois objetos Employee. por ultimo, um método len que retorna o número de caracteres do nome completo do funcionário.
+class Employee:
+
+    def __init__ (self, nome, sobrenome, salario):
+        self.nome = nome
+        self.sobrenome = sobrenome
+        self.email = f"{nome.lower()}.{sobrenome.lower()}@company.com"
+        self.salario = salario
+    
+    def fullname (self):
+        return f"{self.nome} {self.sobrenome}"
+
+    def __repr__ (self): # método especial para retornar a representação de repr do objeto
+        return f"Employee('{self.nome}', '{self.sobrenome}', '{self.salario}')"
+    
+    def __str__(self): # método especial para retornar uma string
+        return f"{self.fullname()} - {self.email}"
+    
+    def __add__(self, other): # método especial para retornar a soma dos salários de dois objetos Employee
+        return self.salario + other.salario
+    
+    def __len__(self): # método especial para retornar o número de caracteres do nome completo do funcionário
+        return len(self.fullname())
+
+dev_1 = Employee('Paulo', 'Cruz', 10000)
+dev_2 = Employee('Test','User', 6000)
+
+print (dev_1 + dev_2) # 16000
+print (len(dev_1)) # 10
+"""
 # 6  Decoradores e propriedades - getters, setters e deleters
