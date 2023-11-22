@@ -320,4 +320,106 @@ dev_2 = Employee('Test','User', 6000)
 print (dev_1 + dev_2) # 16000
 print (len(dev_1)) # 10
 """
-# 6  Decoradores e propriedades - getters, setters e deleters
+# 6  Decoradores de propriedade - getters, setters e deleters
+"""
+# Decoradores de propriedade são uma maneira de definir métodos getter, setter e deleters sem usar a sintaxe de métodos. Eles permitem que você defina um método, mas acesse-o como um atributo. 
+
+class Employee:
+    def __init__ (self, nome, sobrenome):
+        self.nome = nome
+        self.sobrenome = sobrenome
+        self.email = f"{nome.lower()}.{sobrenome.lower()}@company.com"
+
+    def fullname (self):
+        return f"{self.nome} {self.sobrenome}"
+    
+funcionario1 = Employee("Paulo", "Cruz")
+
+print (funcionario1.nome) # Paulo
+print (funcionario1.email) # paulo.cruz@company.com
+print (funcionario1.fullname()) # Paulo Cruz
+# vamos dizer que o funcionário mudou de nome. 
+funcionario1.nome = "Test"
+# apesar do atributo nome ter mudado na instancia funcionario1, o email não mudou, porque ele foi criado pelo construtor __init__. Vamos criar um decorador de propriedade para o email do funcionário e usar o metodo getter.  
+O método getter é usado para retornar o valor de um atributo privado. Para isso, vamos usar o decorator @property.
+class Employee:
+    def __init__ (self, nome, sobrenome):
+        self.nome = nome
+        self.sobrenome = sobrenome
+    
+    @property # decorator, método getter
+    def email(self): 
+        return f"{self.nome.lower()}.{self.sobrenome.lower()}@company.com"
+    
+#agora, o email é um atributo e não um método. 
+
+#imagine que você queira mudar o fullname do funcionário. Você não pode fazer isso porque o email é um atributo e não um método. Para isso, vamos usar o método setter.
+    @property
+    def fullname (self):
+        return f"{self.nome} {self.sobrenome}"
+    
+    @fullname.setter # método setter
+    def fullname(self, nome): 
+        nome, sobrenome = nome.split(" ")
+        self.nome = nome
+        self.sobrenome = sobrenome 
+    
+    @fullname.deleter # método deleter
+    def fullname(self):
+        print("Deletando nome completo!")
+        self.nome = None
+        self.sobrenome = None
+
+# agora, podemos mudar o fullname do funcionário e as informações vão mudar junto.
+funcionario1 = Employee("Paulo", "Cruz")
+funcionario1.fullname = "Test User"
+print (funcionario1.nome) # Test
+print (funcionario1.email) # test.user@company
+print (funcionario1.fullname) # Test User
+
+# deletando o funcionario:
+del funcionario1.fullname # Deletando nome completo!
+"""
+# 7 classes e métodos abstratos
+"""
+from abc import ABC, abstractmethod
+
+CLASSES ABSTRATAS: São modelos para outras classes que poderão ser criadas, não podendo ser instanciadas.
+
+class Monitor(ABC):
+    @abstractmethod
+    def aumentar_claridade (self, num):
+        pass
+    
+    @abstractmethod
+    def reduzir_claridade (self, num):
+       pass
+
+class MonitorFullHD (Monitor):
+    def aumentar_claridade (self, num):
+        print(f"Aumentando a claridade em {num}%")
+    def reduzir_claridade (self, num):
+        print(f"Reduzindo a claridade em {num}%")
+
+monitor = MonitorFullHD()
+monitor.aumentar_claridade(10)
+"""
+# 8 polimorfismo
+"""
+ POLIMORFISMO: É o principio que permite que classes derivadas de uma mesma superclasse tenham métodos iguais (de mesma assinatura) mas comportamentos diferentes.
+
+class Carro:
+    def ligar(self):
+        print("Ligando o carro...")
+class Moto:
+    def ligar(self):
+        print("Ligando a moto...")
+
+def iniciar (veiculo): #método polimórfico
+    veiculo.ligar()
+
+carro = Carro()
+moto = Moto()
+
+iniciar (carro) # Ligando o carro...
+iniciar (moto) # Ligando a moto..."""
