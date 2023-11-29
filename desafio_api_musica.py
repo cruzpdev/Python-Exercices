@@ -48,5 +48,6 @@ def excluir_musica(id):
             return jsonify({"mensagem":"musica deletada"})
     except:
         return jsonify("musica não encontrada",404)
-    
-app.run (port = 5000, host = 'localhost', debug = True)
+
+if __name__ == '__main__':
+    app.run (port = 5000, host = 'localhost', debug = True)
