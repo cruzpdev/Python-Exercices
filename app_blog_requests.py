@@ -76,5 +76,24 @@ def excluir_postagem(id):
     except:
         return jsonify({'status': 'erro'},404)
 
+@app.route('/autores')
+def obter_autores():
+    pass
+
+@app.route('/autores/<int:id_autor>',methods=['GET'])
+def obter_autor_por_id(id_autor):
+    pass
+
+@app.route('/autores',methods=['POST'])
+def novo_autor():
+    pass
+
+@app.route('/autores/<int:id_autor>',methods=['PUT'])
+def alterar_autor(id_autor):
+    pass
+
+@app.route('/autores/<int:id_autor>',methods=['DELETE'])
+def excluir_autor(id_autor):
+    pass
 
 app.run(port=5000, host='localhost', debug=True)
