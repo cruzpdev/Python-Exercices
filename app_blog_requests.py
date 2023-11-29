@@ -23,8 +23,9 @@ DELETE - http://meublog.com/api/postagens/1
 """
 
 from flask import Flask, jsonify, request
+from estrutura_banco_de_dados_blog import Autor, Postagem, app, db
 
-app = Flask(__name__)
+
 postagens = [
     {
         'título': 'minha história',
@@ -78,22 +79,65 @@ def excluir_postagem(id):
 
 @app.route('/autores')
 def obter_autores():
-    pass
+    autores = Autor.query.all()
+    lista_de_autores = []
+    for autor in autores:
+        autor_atual = {}
+        autor_atual['id_autor'] = autor.id_autor
+        autor_atual['nome'] = autor.nome
+        autor_atual['email'] = autor.email
+        lista_de_autores.append(autor_atual)
+    return jsonify(lista_de_autores)
 
 @app.route('/autores/<int:id_autor>',methods=['GET'])
 def obter_autor_por_id(id_autor):
-    pass
+    autor = Autor.query.filter_by(id_autor=id_autor).first()
+    if not autor:
+        return jsonify(f'Autor com id {id_autor} não encontrado'),404
+    autor_atual = {}
+    autor_atual['id_autor'] = autor.id_autor
+    autor_atual['nome'] = autor.nome
+    autor_atual['email'] = autor.email
+
+    return jsonify(f'Você buscou o autor {autor_atual}'),200
 
 @app.route('/autores',methods=['POST'])
 def novo_autor():
-    pass
+    novo_autor = request.get_json()
+    autor = Autor(
+        nome=novo_autor['nome'],
+        email=novo_autor['email'],
+        senha=novo_autor['senha'])
 
 @app.route('/autores/<int:id_autor>',methods=['PUT'])
 def alterar_autor(id_autor):
-    pass
+    usuario_a_alterar = request.get_json()
+    autor = Autor.query.filter_by(id_autor=id_autor).first()
+    try:
+        if not autor:
+            return jsonify(f'Autor com id {id_autor} não encontrado'),404
+    except:
+        pass
+    try:
+        autor.nome = usuario_a_alterar['nome']
+    except:
+        pass
+    try:    
+        autor.email = usuario_a_alterar['email']
+    except:
+        pass
+    try:
+        autor.senha = usuario_a_alterar['senha']
+    except:
+        pass
 
 @app.route('/autores/<int:id_autor>',methods=['DELETE'])
 def excluir_autor(id_autor):
-    pass
+    autor_existente = Autor.query.filter_by(id_autor=id_autor).first()
+    if not autor_existente:
+        return jsonify(f'Autor com id {id_autor} não encontrado'),404
+    db.session.delete(autor_existente)
+    db.session.commit()
 
+    return jsonify(f'Autor com id {id_autor} excluído com sucesso'),200
 app.run(port=5000, host='localhost', debug=True)
